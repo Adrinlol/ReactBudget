@@ -1,5 +1,5 @@
 // useState is a function that returns array with 2 values
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 // Dynamic, unique id 
 import uuid from 'uuid/v4';
@@ -8,11 +8,9 @@ import ExpensList from './components/ExpenseList';
 import ExpenseForm from './components/ExpenseForm';
 import Alert from './components/Alert';
 
-const initialExpenses = [
-  {id:uuid(),charge:"rent",amount:1600},
-  {id:uuid(),charge:"ice-cream",amount:200},
-  {id:uuid(),charge:"hookers",amount:1200}
-];
+// Get the previously put expenses from local storage
+const initialExpenses = localStorage.getItem('expenses')
+? JSON.parse(localStorage.getItem("expenses")): []
 
 function App() {
   // *** State values ***
@@ -24,6 +22,18 @@ function App() {
   const [amount, setAmount] = useState(' ');
   // alert that is false from the start
   const [alert, setAlert] = useState({show:false});
+  // Edit, initially we are not editing any item
+  const [edit,setEdit] = useState(false);
+  // Edit item
+  const [id, setId] = useState(0);
+
+  // *** use Effect ***
+  useEffect(() => {
+    localStorage.setItem('expenses', JSON.stringify
+    (expenses))
+    // Leave the array empty as the secodn parameter, so it doesn't re-render
+  },[]);
+
 
   // *** Functionality ***
   // Passing the event object
@@ -40,15 +50,15 @@ function App() {
     setAmount(e.target.value)
   }
 
-  // Handle alert
+  // Handle alert, an object with two props
     const handleAlert = ({type,text}) => {
       // Change the state of the show to true 
-      setAlert({show:true});
-      // Display the alert back to false in 5 seconds
+        setAlert({show:true, type,text});
+      // Display the alert back to false in 3 seconds
       setTimeout(() => {
         setAlert({show: false})
-      },5000)
-  }
+      },3000)
+  };
   // Handle submit
   const handleSubmit = e => {
     // Prevent default
@@ -56,18 +66,65 @@ function App() {
 
     // If the charge is not an empty string and amount is > 0
     if(charge !== '' && amount > 0 ) {
+      // Are we editing or not?
+      if(edit) {
+        let tempExpenses = expenses.map(item => {
+          // If the item matches the id in state
+          // Since this is es6, it's same as writing charge = charge amount=amount
+          return item.id === id ?{...item, charge, amount}
+           : item
+        });
+        setExpenses(tempExpenses);
+        setEdit(false);
+        handleAlert({type:"success", text:"Item edited"});
+
+      }
+      else {
       // This is same as writing charge=charge amount=amount
       const singleExpense = {id:uuid(), charge, amount};
       // Spread operator
       setExpenses([...expenses,singleExpense]);
+      // Two types: one for the sucess and one for the danger
+      handleAlert({type:"success", text:"Item added"});
       // Reset the input back to the empty strings
+      }
+
       setCharge('');
       setAmount('');
     }
     else {
-      // Handle alert called
+      // If 
+      handleAlert({type:"danger", text:"Charge can't be an empty value"});
     }
-  }
+  };
+
+  // Clear all items
+  const clearItems = () => {
+    // Pass an empty array, once 
+    setExpenses([]);
+    handleAlert({type:"danger", text:"Items Cleared"});
+  };
+
+  // Delete the single item
+  const handleDelete = (id) => {
+    // A callback function that is being applied to each and every array
+    let tempExpenses = expenses.filter(item => item.id !== id);
+    // Set expenses to the updated array 
+    setExpenses(tempExpenses);
+    handleAlert({type:"danger", text:"Item Cleared"});
+  };
+
+  // Edit the single item
+  const handleEdit = id => {
+    // If item.id is equal to id return that item 
+    let expense = expenses.find(item => item.id === id);
+    let { charge, amount } = expense;
+    setCharge(charge);
+    setAmount(amount);
+    setEdit(true);
+    // ID that I'm getting as a parameter
+    setId(id);
+  };
 
   return (
     <>
@@ -82,8 +139,14 @@ function App() {
           handleAmount={handleAmount}
           handleCharge={handleCharge}
           handleSubmit={handleSubmit}
+          edit={edit}
         />
-        <ExpensList expenses={expenses}/>
+        <ExpensList 
+          expenses={expenses} 
+          handleDelete={handleDelete} 
+          handleEdit={handleEdit}
+          clearItems={clearItems}
+        />
       </main>
       <h1>
         total spending: <span className="total">
