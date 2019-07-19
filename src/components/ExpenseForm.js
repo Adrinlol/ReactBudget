@@ -13,26 +13,25 @@ const ExpenseForm = ({
         <form onSubmit={handleSubmit}>
             <div className="form-center">
                 <div className="form-group">
-                    <label htmlFor="charge">Charge</label>
+                    <label className="form-title" htmlFor="charge">Description</label>
                     <input 
                         type="text" 
                         className="form-control" 
-                        id="charge" 
+                        id="charge"
                         name="charge"
-                        placeholder="Enter the expense"
-                        // We are getting this from the state
                         value={charge}
+                        placeholder="Enter the Description" 
                         onChange={handleCharge}
                         />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="amount">Amount</label>
+                    <label className="form-title"htmlFor="amount">Amount</label>
                     <input 
                         type="number" 
                         className="form-control" 
                         id="amount" 
                         name="amount"
-                        placeholder="Enter the amount"
+                        placeholder="Enter the Amount"
                         // We are getting this from the state
                         value={amount}
                         onChange={handleAmount}

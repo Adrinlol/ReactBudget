@@ -9,8 +9,8 @@ import ExpenseForm from './components/ExpenseForm';
 import Alert from './components/Alert';
 
 // Get the previously put expenses from local storage
-const initialExpenses = localStorage.getItem('expenses')
-? JSON.parse(localStorage.getItem("expenses")): []
+const initialExpenses = localStorage.getItem("expenses")
+? JSON.parse(localStorage.getItem("expenses")) : [];
 
 function App() {
   // *** State values ***
@@ -29,10 +29,9 @@ function App() {
 
   // *** use Effect ***
   useEffect(() => {
-    localStorage.setItem('expenses', JSON.stringify
-    (expenses))
+    localStorage.setItem('expenses', JSON.stringify(expenses))
     // Leave the array empty as the secodn parameter, so it doesn't re-render
-  },[]);
+  },[expenses]);
 
 
   // *** Functionality ***
@@ -94,7 +93,8 @@ function App() {
     }
     else {
       // If 
-      handleAlert({type:"danger", text:"Charge can't be an empty value"});
+      handleAlert({type:"danger", text:"Description can't be an empty value"});
+      
     }
   };
 
@@ -131,7 +131,7 @@ function App() {
       {/* Only display the alert if the show is true */}
       {alert.show && <Alert type={alert.type} text={alert.text} />}
       <Alert />
-      <h1>Budget Calculator</h1>
+      <h1>Calculate your budget</h1>
       <main className="App"> 
         <ExpenseForm 
           charge={charge} 
