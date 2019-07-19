@@ -2,12 +2,10 @@
 :root {
   --primaryColor: #f67280;
   --mainWhite: #fff;
-  --mainBlack: #777;
+  --mainGrey: #777;
   --mainRed: #DF2A3D;
-  --mainGreen: #3FAA96;
+  --mainGreen: #66c6b5;
   --mainBlue:#75a0c5;
-  --mainOrange:#FF920F;
-  --mainPurple:#c06c84;
 }
 
 * {
@@ -17,7 +15,7 @@
 
 body {
   background: var(--mainBlue);
-  color: var(--mainBlack);
+  color: var(--mainGrey);
   font-family: 'Orbitron', sans-serif;
 }
 
@@ -58,7 +56,7 @@ label {
 .form-title {
   font-weight: bold;
   font-size: 1.5rem;  
-  color:var(--mainBlack);
+  color:var(--mainGrey);
 }
 
 .form-control {
@@ -136,7 +134,7 @@ label {
 
 .expense {
   font-weight: 700;
-  color:var(--mainOrange);
+  color:var(--mainGrey);
   margin-right: 2rem;
   text-transform: capitalize;
 }
